@@ -62,8 +62,32 @@ void app_main(void)
     i2c_master_dev_handle_t dev_handle;
     ESP_ERROR_CHECK(i2c_master_bus_add_device(bus_handle, &dev_cfg, &dev_handle));
 
-    // Command to turn display on in normal mode
-    send_command(dev_handle, 0xaf);
+    // turn display off to configure
+    send_command(dev_handle, 0xae);
+
+    // set display clock divide ration
+    send_command(dev_handle, 0xd5);
+    send_command(dev_handle, 0x80);
+
+    // set the COM multiplex ration
+    send_command(dev_handle, 0xa8);
+    send_command(dev_handle, 0x3f);
+
+    // set display offset
+    send_command(dev_handle, 0xd3);
+    send_command(dev_handle, 0x00);
+
+    // set start line
+    send_command(dev_handle, 0x40);
+
+    // set charge pump
+    send_command(dev_handle, 0x8d);
+    send_command(dev_handle, 0x14);
+
+    // set memory mode
+    send_command(dev_handle, 0x20);
+    send_command(dev_handle, 0x00);
+
     // Command for setting contrast to 100%
     send_command(dev_handle, 0x81);
     send_command(dev_handle, 0xff);
@@ -71,17 +95,7 @@ void app_main(void)
     // Commands for continuous horizontal scroll setup
     // Set orientation to right
     send_command(dev_handle, 0x26);
+
     // Dummy byte
     send_command(dev_handle, 0x00);
 }
-
-
-
-
-
-
-
-
-
-
-
